@@ -1,0 +1,997 @@
+/* ==========================================================================
+   Betty's Interactive Birthday Website - Styling Sheet
+   Aesthetic: Luxury Matte Dark & Soft Romantic Pastel (Black + Pink/Lavender/Cream)
+   ========================================================================== */
+
+:root {
+  --color-bg-dark: #0f0e13;
+  --color-bg-light: #16151d;
+  --color-accent-pink: #ffa3b1;
+  --color-accent-rose: #f07b90;
+  --color-accent-lavender: #d6bdf2;
+  --color-cream: #fbf6f0;
+  --color-glass-bg: rgba(22, 21, 29, 0.75);
+  --color-glass-border: rgba(255, 163, 177, 0.2);
+  --color-text-primary: #f6eef3;
+  --color-text-muted: #c2b5bc;
+  
+  --font-serif: 'Playfair Display', Georgia, serif;
+  --font-sans: 'Montserrat', Helvetica, sans-serif;
+  --font-cursive: 'Dancing Script', cursive;
+  
+  --transition-smooth: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--color-bg-dark);
+  color: var(--color-text-primary);
+  min-height: 100vh;
+  overflow-x: hidden;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Background Canvas & Floating Gradient */
+#particles-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1;
+  pointer-events: none;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at 20% 30%, rgba(240, 123, 144, 0.15), transparent 45%),
+              radial-gradient(circle at 80% 70%, rgba(214, 189, 242, 0.15), transparent 45%),
+              linear-gradient(135deg, #0b0a0f 0%, #15131b 100%);
+  z-index: 0;
+}
+
+/* Audio & Interface Utility Controls */
+.audio-control {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: var(--color-glass-bg);
+  border: 1px solid var(--color-glass-border);
+  padding: 10px 16px;
+  border-radius: 30px;
+  backdrop-filter: blur(10px);
+  z-index: 100;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+  transition: var(--transition-smooth);
+}
+
+.audio-control:hover {
+  border-color: var(--color-accent-pink);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 163, 177, 0.2);
+}
+
+.music-icon {
+  width: 18px;
+  height: 18px;
+  color: var(--color-accent-pink);
+}
+
+.icon-playing {
+  animation: rotateMusic 4s linear infinite;
+}
+
+@keyframes rotateMusic {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.audio-text {
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  color: var(--color-text-primary);
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* Main Container & Stage Engine */
+#app-container {
+  width: 100%;
+  max-width: 600px;
+  padding: 24px;
+  z-index: 10;
+  position: relative;
+}
+
+.stage {
+  display: none;
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.stage.active {
+  display: block;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Typography Rules */
+.heading-serif {
+  font-family: var(--font-serif);
+  font-weight: 600;
+  letter-spacing: -0.5px;
+  line-height: 1.25;
+  color: var(--color-text-primary);
+  margin-bottom: 12px;
+}
+
+.title-glow {
+  background: linear-gradient(135deg, var(--color-cream) 30%, var(--color-accent-pink) 70%, var(--color-accent-lavender) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 20px rgba(255, 163, 177, 0.2));
+}
+
+.subtitle-sans {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.6;
+  font-weight: 400;
+}
+
+.body-sans {
+  font-family: var(--font-sans);
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+.dancing-serif {
+  font-family: var(--font-cursive);
+}
+
+.font-large {
+  font-size: 24px;
+}
+
+.font-small {
+  font-size: 12px;
+}
+
+.text-center { text-align: center; }
+.text-right { text-align: right; }
+.text-muted { color: var(--color-text-muted); }
+.text-white { color: #ffffff; }
+.text-light { color: #f0ebf1; }
+.mt-3 { margin-top: 16px; }
+.mt-4 { margin-top: 24px; }
+.mt-5 { margin-top: 32px; }
+.mb-4 { margin-bottom: 24px; }
+
+/* Premium Glassmorphic Card styling */
+.glass-card {
+  background: var(--color-glass-bg);
+  border: 1px solid var(--color-glass-border);
+  padding: 40px 30px;
+  border-radius: 24px;
+  backdrop-filter: blur(15px);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5), 
+              inset 0 1px 2px rgba(255, 255, 255, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.glass-card::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(35deg, transparent 40%, rgba(255, 255, 255, 0.03) 50%, transparent 60%);
+  pointer-events: none;
+  transform: rotate(-30deg);
+}
+
+.card-header-icon {
+  margin-bottom: 16px;
+  display: flex;
+  justify-content: center;
+}
+
+.rose-icon {
+  width: 48px;
+  height: 48px;
+  color: var(--color-accent-rose);
+  filter: drop-shadow(0 0 8px rgba(240, 123, 144, 0.5));
+}
+
+/* Heart pulsation animation */
+.heart-pulse-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 24px;
+}
+
+.heart-pulse {
+  font-size: 64px;
+  filter: drop-shadow(0 0 15px rgba(240, 123, 144, 0.4));
+  animation: heartPulse 1.6s infinite ease-in-out;
+}
+
+@keyframes heartPulse {
+  0% { transform: scale(1); }
+  15% { transform: scale(1.18); }
+  30% { transform: scale(1); }
+  45% { transform: scale(1.12); }
+  60% { transform: scale(1); }
+  100% { transform: scale(1); }
+}
+
+.nickname-badge {
+  display: inline-block;
+  background: rgba(214, 189, 242, 0.15);
+  border: 1px solid rgba(214, 189, 242, 0.3);
+  color: var(--color-accent-lavender);
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+  margin: 16px 0 24px 0;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+/* Custom Interactive Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 28px;
+  border-radius: 30px;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+  border: none;
+  position: relative;
+  overflow: hidden;
+  z-index: 5;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--color-accent-rose), var(--color-accent-pink));
+  color: var(--color-bg-dark);
+  box-shadow: 0 4px 20px rgba(240, 123, 144, 0.4);
+}
+
+.btn-primary:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(240, 123, 144, 0.6);
+}
+
+.btn-secondary {
+  background: var(--color-glass-bg);
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-glass-border);
+}
+
+.btn-secondary:hover {
+  border-color: var(--color-accent-pink);
+  background: rgba(255, 163, 177, 0.1);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 163, 177, 0.15);
+}
+
+.btn-sm {
+  padding: 10px 20px;
+  font-size: 13px;
+}
+
+/* Stage 2: Intro Letter Style and Typewriter */
+.typewriter-container {
+  min-height: 180px;
+  margin-top: 20px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 12px;
+  padding: 20px;
+  border-left: 3px solid var(--color-accent-pink);
+}
+
+.letter-style {
+  font-style: italic;
+  font-family: var(--font-serif);
+  color: #ebdbe3;
+  white-space: pre-line;
+}
+
+/* Stage 3: Polaroid Swipe/Deck Gallery */
+.gallery-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  z-index: 10;
+}
+
+.polaroid-wrapper {
+  width: 100%;
+  height: 380px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  perspective: 1000px;
+  margin: 10px 0;
+  position: relative;
+}
+
+.polaroid-deck {
+  width: 290px;
+  height: 340px;
+  position: relative;
+}
+
+.polaroid-card {
+  width: 100%;
+  height: 100%;
+  background: #ffffff;
+  border-radius: 4px;
+  padding: 14px 14px 24px 14px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6), 
+              0 2px 5px rgba(0, 0, 0, 0.3);
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  transform-origin: center center;
+  cursor: grab;
+  user-select: none;
+  transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.5s ease;
+}
+
+.polaroid-card:active {
+  cursor: grabbing;
+}
+
+.polaroid-image-container {
+  width: 100%;
+  height: 240px;
+  background: #eceff1;
+  overflow: hidden;
+  border: 1px solid #dcdcdc;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.polaroid-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.polaroid-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.video-play-hint {
+  position: absolute;
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
+  border-radius: 50%;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  pointer-events: none;
+  opacity: 0.8;
+}
+
+.polaroid-caption {
+  font-family: var(--font-cursive);
+  font-size: 20px;
+  font-weight: 700;
+  color: #1f1e24;
+  text-align: center;
+  margin-top: 14px;
+  line-height: 1.2;
+}
+
+.gallery-controls {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-top: 10px;
+}
+
+.btn-circle {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--color-glass-bg);
+  border: 1px solid var(--color-glass-border);
+  color: var(--color-text-primary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition-smooth);
+}
+
+.btn-circle:hover {
+  border-color: var(--color-accent-pink);
+  transform: scale(1.1);
+  color: var(--color-accent-pink);
+}
+
+.gallery-counter {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+.title-shadow {
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+/* Stage 4: Quiz Interface */
+.quiz-box {
+  position: relative;
+  background: rgba(0, 0, 0, 0.25);
+  border-radius: 16px;
+  padding: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  margin-bottom: 16px;
+}
+
+.quiz-progress-bar {
+  width: 100%;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+
+.quiz-progress {
+  height: 100%;
+  background: linear-gradient(90deg, var(--color-accent-lavender), var(--color-accent-pink));
+  transition: width 0.4s ease;
+}
+
+.question-text {
+  font-size: 18px;
+  line-height: 1.4;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.quiz-options {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.option-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 14px 18px;
+  border-radius: 12px;
+  color: var(--color-text-primary);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  text-align: left;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+}
+
+.option-btn:hover {
+  background: rgba(255, 163, 177, 0.08);
+  border-color: rgba(255, 163, 177, 0.3);
+  transform: translateX(4px);
+}
+
+/* Feedback Overlay */
+.quiz-feedback {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(18, 17, 24, 0.95);
+  border-radius: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 20;
+  padding: 24px;
+  text-align: center;
+  animation: fadeIn 0.3s ease-out forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.feedback-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+
+.feedback-icon {
+  font-size: 40px;
+}
+
+.feedback-title {
+  font-family: var(--font-serif);
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.feedback-message {
+  font-size: 14px;
+  color: var(--color-text-muted);
+  line-height: 1.6;
+  max-width: 85%;
+}
+
+.quiz-score {
+  font-size: 13px;
+  font-weight: 500;
+}
+
+/* Stage 5: Gift Box Selection */
+.gift-container {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin: 30px 0;
+}
+
+.gift-box-item {
+  width: 90px;
+  height: 90px;
+  position: relative;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.gift-box-item:hover {
+  transform: scale(1.1) translateY(-5px);
+}
+
+.gift-lid {
+  width: 76px;
+  height: 16px;
+  background: #f07b90;
+  border-radius: 3px;
+  position: absolute;
+  bottom: 56px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  z-index: 3;
+  transition: transform 0.4s ease;
+}
+
+.gift-body {
+  width: 70px;
+  height: 56px;
+  background: #ffa3b1;
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
+  position: relative;
+  z-index: 2;
+}
+
+/* Cross Ribbons on boxes */
+.gift-body::before, .gift-lid::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 14px;
+  height: 100%;
+  background: var(--color-cream);
+  transform: translateX(-50%);
+  z-index: 4;
+}
+
+.gift-label {
+  font-size: 11px;
+  font-weight: 600;
+  margin-top: 8px;
+  color: var(--color-text-muted);
+}
+
+/* Color codes for gift boxes */
+.gift-box-item:nth-child(2) .gift-lid { background: #d6bdf2; }
+.gift-box-item:nth-child(2) .gift-body { background: #e6d6fa; }
+.gift-box-item:nth-child(3) .gift-lid { background: #9bd3e5; }
+.gift-box-item:nth-child(3) .gift-body { background: #c6e8f4; }
+
+/* Box bouncing animation */
+.gift-box-item {
+  animation: boxWobble 4s infinite ease-in-out;
+}
+
+.gift-box-item:nth-child(2) { animation-delay: 0.5s; }
+.gift-box-item:nth-child(3) { animation-delay: 1s; }
+
+@keyframes boxWobble {
+  0%, 100% { transform: rotate(0); }
+  25% { transform: rotate(3deg) translateY(-2px); }
+  50% { transform: rotate(-3deg) translateY(0); }
+  75% { transform: rotate(2deg) translateY(-1px); }
+}
+
+/* Gift Reveal Coupon Layout */
+.gift-reveal-modal {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(18, 17, 24, 0.95);
+  border-radius: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 30;
+  padding: 24px;
+}
+
+.coupon-card {
+  width: 100%;
+  max-width: 320px;
+  background: var(--color-cream);
+  color: #1f1e24;
+  border-radius: 12px;
+  padding: 20px;
+  position: relative;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+  animation: ticketPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.2) forwards;
+}
+
+@keyframes ticketPop {
+  from { transform: scale(0.7) rotate(-5deg); opacity: 0; }
+  to { transform: scale(1) rotate(0); opacity: 1; }
+}
+
+.coupon-border {
+  position: absolute;
+  top: 8px;
+  bottom: 8px;
+  left: 8px;
+  right: 8px;
+  border: 1px dashed rgba(240, 123, 144, 0.6);
+  pointer-events: none;
+  border-radius: 8px;
+}
+
+.coupon-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 10px;
+}
+
+.coupon-tag {
+  font-size: 10px;
+  font-weight: 600;
+  background: rgba(240, 123, 144, 0.15);
+  color: var(--color-accent-rose);
+  padding: 4px 10px;
+  border-radius: 30px;
+  letter-spacing: 1px;
+}
+
+.coupon-title {
+  font-family: var(--font-serif);
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.coupon-desc {
+  font-size: 13px;
+  color: #555555;
+  line-height: 1.5;
+}
+
+.coupon-footer {
+  margin-top: 6px;
+  font-family: var(--font-cursive);
+  font-size: 16px;
+  font-weight: 600;
+}
+
+/* Stage 6: Final Love Letter Envelope Logic */
+.letter-stage-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 520px;
+  width: 100%;
+}
+
+.envelope-wrapper {
+  position: relative;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.envelope-wrapper:hover {
+  transform: translateY(-8px) scale(1.03);
+}
+
+.envelope {
+  position: relative;
+  width: 280px;
+  height: 180px;
+  background: #f1bfb8;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.envelope::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 3;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 90px 140px 90px 140px;
+  border-color: transparent transparent #e89f94 transparent;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+
+.envelope::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 3;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 90px 140px 90px 140px;
+  border-color: transparent transparent transparent #edaba0;
+  border-bottom-left-radius: 8px;
+}
+
+.flap {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 90px 140px 0 140px;
+  border-color: #eda59b transparent transparent transparent;
+  transform-origin: top;
+  z-index: 5;
+  transition: transform 0.4s ease 0.2s, z-index 0.2s ease 0.2s;
+}
+
+.pocket {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 4;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 90px 0 90px 280px;
+  border-color: transparent transparent transparent transparent;
+  border-bottom-right-radius: 8px;
+}
+
+.envelope-wrapper:hover .flap {
+  transform: rotateX(180deg);
+  z-index: 2;
+}
+
+.letter-preview {
+  position: absolute;
+  top: 15px;
+  width: 240px;
+  height: 140px;
+  background: var(--color-cream);
+  z-index: 2;
+  border-radius: 4px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  transition: transform 0.4s ease;
+}
+
+.letter-line {
+  height: 6px;
+  background: #e0d0cb;
+  border-radius: 3px;
+}
+
+.line1 { width: 80%; }
+.line2 { width: 50%; }
+
+.envelope-wrapper:hover .letter-preview {
+  transform: translateY(-40px);
+}
+
+.envelope-label {
+  position: absolute;
+  z-index: 6;
+  font-family: var(--font-cursive);
+  font-size: 22px;
+  font-weight: 700;
+  color: #ffffff;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+.click-instruction {
+  font-size: 13px;
+  letter-spacing: 0.5px;
+  animation: nudge 2s infinite ease-in-out;
+}
+
+@keyframes nudge {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(4px); }
+}
+
+/* Heartfelt Unfolded parchment styling */
+.unfolded-letter-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.parchment-letter {
+  width: 100%;
+  max-width: 520px;
+  background: var(--color-cream);
+  color: #1a1a1a;
+  border-radius: 8px;
+  padding: 40px 30px;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.7);
+  border-top: 5px solid var(--color-accent-rose);
+  position: relative;
+  max-height: 85vh;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-accent-pink) var(--color-cream);
+}
+
+.parchment-letter::-webkit-scrollbar {
+  width: 6px;
+}
+
+.parchment-letter::-webkit-scrollbar-thumb {
+  background-color: var(--color-accent-pink);
+  border-radius: 3px;
+}
+
+.letter-header {
+  border-bottom: 1px solid rgba(240, 123, 144, 0.2);
+  padding-bottom: 15px;
+  margin-bottom: 20px;
+}
+
+.letter-date {
+  font-size: 11px;
+  color: #777777;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.letter-body {
+  font-family: var(--font-serif);
+  font-size: 15px;
+  line-height: 1.8;
+  color: #2c2c2c;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  text-align: justify;
+}
+
+.letter-body p {
+  text-indent: 14px;
+}
+
+.signature-font {
+  font-family: var(--font-cursive);
+  color: var(--color-accent-rose);
+}
+
+/* Responsive Viewports */
+@media (max-width: 480px) {
+  #app-container {
+    padding: 16px;
+  }
+  
+  .glass-card {
+    padding: 30px 16px;
+  }
+  
+  .heading-serif {
+    font-size: 24px;
+  }
+  
+  .polaroid-deck {
+    width: 250px;
+    height: 300px;
+  }
+  
+  .polaroid-image-container {
+    height: 200px;
+  }
+  
+  .polaroid-caption {
+    font-size: 17px;
+  }
+  
+  .gift-container {
+    gap: 12px;
+  }
+  
+  .gift-box-item {
+    width: 76px;
+    height: 76px;
+  }
+  
+  .gift-lid {
+    width: 64px;
+    bottom: 46px;
+  }
+  
+  .gift-body {
+    width: 58px;
+    height: 46px;
+  }
+}

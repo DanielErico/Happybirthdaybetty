@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Happy Birthday Mon Coeur 💖</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Montserrat:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  
+  <!-- Error Logging and Debug Support -->
+  <script>
+    window.addEventListener('error', function(e) {
+      console.error(e);
+      let errorDiv = document.getElementById('debug-error-log');
+      if (!errorDiv) {
+        errorDiv = document.createElement('div');
+        errorDiv.id = 'debug-error-log';
+        errorDiv.style.cssText = 'position:fixed;top:10px;left:10px;background:rgba(255,0,0,0.85);color:white;padding:15px;z-index:99999;font-family:monospace;font-size:12px;border-radius:8px;max-width:90%;box-shadow:0 5px 15px rgba(0,0,0,0.5);white-space:pre-wrap;line-height:1.4;';
+        document.body.appendChild(errorDiv);
+      }
+      errorDiv.textContent += '\nError: ' + e.message + ' at ' + e.filename + ':' + e.lineno;
+    });
+  </script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="style.css?v=20260601-3">
+</head>
+<body>
+
+  <!-- Floating Particles Canvas Background -->
+  <canvas id="particles-canvas"></canvas>
+
+  <!-- Ambient Sound Control -->
+  <div class="audio-control" id="audio-toggle" title="Toggle background melody">
+    <i data-lucide="music-4" class="music-icon icon-playing"></i>
+    <i data-lucide="music-off" class="music-icon icon-muted hidden"></i>
+    <span class="audio-text">Play Melody ♫</span>
+  </div>
+
+  <!-- Main Container -->
+  <main id="app-container">
+
+    <!-- STAGE 1: LANDING / START SCREEN -->
+    <section class="stage active" id="stage-landing">
+      <div class="glass-card text-center scale-up">
+        <div class="heart-pulse-container">
+          <div class="heart-pulse">💖</div>
+        </div>
+        <h1 class="heading-serif title-glow">Joyed & Finished</h1>
+        <p class="subtitle-sans text-muted">A special little journey, compiled with love just for you.</p>
+        <div class="nickname-badge">For Beatrice (Betty) ✨</div>
+        <button class="btn btn-primary" onclick="nextStage(2)">
+          <span>Open your surprise 🎀</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- STAGE 2: INTRO MESSAGE SCREEN -->
+    <section class="stage" id="stage-intro">
+      <div class="glass-card">
+        <div class="card-header-icon">
+          <i data-lucide="mail-open" class="rose-icon"></i>
+        </div>
+        <h2 class="heading-serif text-center">Hello, Mon Coeur 💕</h2>
+        <div class="typewriter-container">
+          <p id="intro-typewriter-text" class="body-sans letter-style"></p>
+        </div>
+        <div class="text-center mt-3">
+          <button class="btn btn-secondary" onclick="nextStage(3)">
+            <span>Continue →</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- STAGE 3: MEMORY GALLERY SCREEN -->
+    <section class="stage" id="stage-gallery">
+      <div class="gallery-container">
+        <h2 class="heading-serif text-center text-white title-shadow">Our Playful Memories 📸</h2>
+        <p class="subtitle-sans text-center text-light mb-4">A look back at some of our favorite moments...</p>
+        
+        <div class="polaroid-wrapper">
+          <!-- Polaroid cards will be populated dynamically by JS -->
+          <div class="polaroid-deck" id="polaroid-deck"></div>
+        </div>
+
+        <div class="gallery-controls">
+          <button class="btn-circle" id="prev-gallery-btn" onclick="prevPolaroid()">
+            <i data-lucide="chevron-left"></i>
+          </button>
+          <span class="gallery-counter" id="gallery-counter">1 / 8</span>
+          <button class="btn-circle" id="next-gallery-btn" onclick="nextPolaroid()">
+            <i data-lucide="chevron-right"></i>
+          </button>
+        </div>
+
+        <div class="text-center mt-4">
+          <button class="btn btn-primary" onclick="nextStage(4)">
+            <span>Next memory →</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- STAGE 4: INTERACTIVE QUIZ GAME SCREEN -->
+    <section class="stage" id="stage-quiz">
+      <div class="glass-card">
+        <div class="card-header-icon">
+          <i data-lucide="sparkles" class="rose-icon"></i>
+        </div>
+        <h2 class="heading-serif text-center">Relationship Trivialities 🧠</h2>
+        <p class="subtitle-sans text-center text-muted mb-4">Let's see if you remember our story, Mon Coeur!</p>
+
+        <!-- Quiz Container -->
+        <div class="quiz-box">
+          <div class="quiz-progress-bar">
+            <div class="quiz-progress" id="quiz-progress" style="width: 0%"></div>
+          </div>
+          
+          <div class="quiz-question-container">
+            <h3 class="question-text" id="question-text">Question text goes here?</h3>
+            <div class="quiz-options" id="quiz-options">
+              <!-- Dynamically populated options buttons -->
+            </div>
+          </div>
+
+          <!-- Answer Feedback Overlay -->
+          <div class="quiz-feedback hidden" id="quiz-feedback">
+            <div class="feedback-content">
+              <div class="feedback-icon" id="feedback-icon">🎉</div>
+              <h4 class="feedback-title" id="feedback-title">Correct!</h4>
+              <p class="feedback-message" id="feedback-message">Playful message response...</p>
+              <button class="btn btn-sm btn-primary" id="feedback-next-btn" onclick="advanceQuiz()">
+                <span>Next Question →</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quiz Tally -->
+        <div class="quiz-score text-center text-muted" id="quiz-score-display">
+          Question 1 of 5
+        </div>
+      </div>
+    </section>
+
+    <!-- STAGE 5: MINI INTERACTIVE SURPRISE SCREEN -->
+    <section class="stage" id="stage-surprise">
+      <div class="glass-card text-center">
+        <div class="card-header-icon">
+          <i data-lucide="gift" class="rose-icon"></i>
+        </div>
+        <h2 class="heading-serif">Choose Your Surprise 🎁</h2>
+        <p class="subtitle-sans text-muted mb-4">I made some digital coupons for you. Choose a box to claim its secret surprise!</p>
+
+        <div class="gift-container">
+          <div class="gift-box-item" onclick="openGiftBox(0, this)">
+            <div class="gift-lid"></div>
+            <div class="gift-body"></div>
+            <span class="gift-label">Box 1</span>
+          </div>
+          <div class="gift-box-item" onclick="openGiftBox(1, this)">
+            <div class="gift-lid"></div>
+            <div class="gift-body"></div>
+            <span class="gift-label">Box 2</span>
+          </div>
+          <div class="gift-box-item" onclick="openGiftBox(2, this)">
+            <div class="gift-lid"></div>
+            <div class="gift-body"></div>
+            <span class="gift-label">Box 3</span>
+          </div>
+        </div>
+
+        <!-- Gift Reveal Container -->
+        <div class="gift-reveal-modal hidden" id="gift-reveal-modal">
+          <div class="coupon-card">
+            <div class="coupon-border"></div>
+            <div class="coupon-content">
+              <span class="coupon-tag">OFFICIAL COUPON</span>
+              <h3 class="coupon-title" id="coupon-title">Unlimited Back Rubs</h3>
+              <p class="coupon-desc" id="coupon-desc">Valid anytime you feel stressed or just want some pampering. Non-refundable, non-expiring!</p>
+              <div class="coupon-footer">
+                <span>Signed: Your Finished Man ✍️</span>
+              </div>
+            </div>
+          </div>
+          <button class="btn btn-sm btn-secondary mt-3" onclick="closeGiftReveal()">
+            <span>Pick Another Box 🎀</span>
+          </button>
+        </div>
+
+        <div class="text-center mt-5">
+          <button class="btn btn-primary" id="surprise-next-btn" onclick="nextStage(6)">
+            <span>Reveal Final Surprises ✨</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- STAGE 6: FINAL LOVE LETTER SCREEN -->
+    <section class="stage" id="stage-letter">
+      <div class="letter-stage-container">
+        
+        <!-- Interactive Envelope -->
+        <div class="envelope-wrapper" id="envelope-wrapper" onclick="openLetterAnimation()">
+          <div class="envelope">
+            <div class="flap"></div>
+            <div class="pocket"></div>
+            <div class="letter-preview">
+              <div class="letter-line line1"></div>
+              <div class="letter-line line2"></div>
+            </div>
+            <div class="envelope-label">Beatrice 💖</div>
+          </div>
+          <p class="click-instruction text-white text-center mt-3">Click the envelope to open it 💌</p>
+        </div>
+
+        <!-- Heartfelt Unfolded Letter -->
+        <div class="unfolded-letter-container hidden" id="unfolded-letter-container">
+          <div class="parchment-letter scale-up">
+            <div class="letter-header">
+              <span class="letter-date">June 2nd, 2026</span>
+              <h2 class="dancing-serif font-large text-center">My Dear Beatrice,</h2>
+            </div>
+            
+            <div class="letter-body body-sans">
+              <p>It’s my girls birthdayyyyyy…..</p>
+              <p>Sorry, not so good at writing letters 😂. I would have written this with my hands but you will probably have more headaches reading it than I’ve ever given you.</p>
+              <p>They say never meet your heroes, but you met me on the 23rd of January, 2026 fortunately 😌. And ever since you just made this guy fall in love after 3 years of fearing women. But I met you and that day I knew that perspective changed and knew this tough guy is about to be a finished man (which you accomplished).</p>
+              <p>The last 3 months have felt like I’ve known you for years.</p>
+              <p>Ever since I met you, there’s just something about you I can’t just explain in words, like you really mean so much to me and I can’t comprehend. Your act of making the people you love happy even if it means to drain your account still amazes and I’m learning from that really well, the way you speak, the way you act all makes you so unique. Your energy is really out of this world that I long to always have you around me.</p>
+              <p>You’ve made me realise there’s still one decent lady out there that matches exactly who I’ve always prayed for. I still don't know what you see special in me that made you say YES though, but that YES is locked in 😂.</p>
+              <p>Whenever you are around me, it is always like all my worries and heavy loaded head is just relaxed, like all my problems are gone. You are my therapy. Having someone to hope to see every single day gives me a lot of confidence and reasons to always keep pushing with what I do. When you weren’t in the picture, life felt like I had a load on my back until God saw the poor guy and brought him a perfect solution because God saw that man was alone. And ever since, those burdens and loads felt like they weren't even there.</p>
+              <p>Chaiiiii…… see as you make tough guy sit for bed by 11pm dey compose letter, I’m finished for real. But I’ve never written a letter and felt more happy than this. The last one I wrote was for Babs to sign NASS money withdrawal 😂😂.</p>
+              <p>Don’t worry after school, I will make sure to fly over and see you every night. And No, it’s not an airplane, my broom airways 🧙‍♂️</p>
+              <p>Don’t get too emotional reading this, I might deny everything later 😂💕</p>
+              <p>Happy Birthday to you my Love, wishing you the very best this year. It’s your first birthday with me and really I wish I did more to make this day even special for you (You deserve it). </p>
+              <p>I pray for God’s blessings over your life, no evil or plots of the devil shall reign upon your life in Jesus name. I anticipate your success and growth from this new age forward.</p>
+              <p class="font-large text-right signature-font mt-4">I love you to the moon and back 💕</p>
+              <p class="text-right text-muted font-small">Your therapy patient, Danny</p>
+            </div>
+
+            <div class="text-center mt-5">
+              <button class="btn btn-secondary" onclick="restartExperience()">
+                <span>Replay Experience 💖</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- GSAP for smooth animations -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <!-- Canvas Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <!-- Custom JS -->
+  <script src="script.js?v=20260601-3"></script>
+
+  <!-- Diagnostic Self-Healing Script -->
+  <script>
+    setTimeout(() => {
+      const landing = document.getElementById('stage-landing');
+      const card = landing ? landing.querySelector('.glass-card') : null;
+      console.log('Self-healing diagnostic check...');
+      if (landing && card) {
+        const landingStyle = window.getComputedStyle(landing);
+        const cardStyle = window.getComputedStyle(card);
+        console.log('Landing stage computed visibility - Display:', landingStyle.display, 'Opacity:', landingStyle.opacity);
+        console.log('Glass card computed visibility - Display:', cardStyle.display, 'Opacity:', cardStyle.opacity);
+        
+        // Self-heal if the elements are invisible but marked active
+        if (parseFloat(landingStyle.opacity) === 0 || parseFloat(cardStyle.opacity) === 0 || landingStyle.display === 'none') {
+          console.warn('Self-healing triggered: elements are invisible. Overriding opacity and display inline...');
+          landing.style.setProperty('display', 'block', 'important');
+          landing.style.setProperty('opacity', '1', 'important');
+          landing.style.setProperty('transform', 'none', 'important');
+          card.style.setProperty('opacity', '1', 'important');
+          card.style.setProperty('transform', 'none', 'important');
+        }
+      } else {
+        console.error('Self-healing: Landing elements not found in the DOM.');
+      }
+    }, 1200);
+  </script>
+</body>
+</html>

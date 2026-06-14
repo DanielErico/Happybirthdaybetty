@@ -163,7 +163,11 @@ window.addEventListener('DOMContentLoaded', () => {
     duration: 1.2,
     ease: "power3.out"
   });
+
+  // Attempt autoplay immediately when site is opened
+  tryAutoplay();
 });
+
 
 /* ==========================================================================
    Background Heart Particles Canvas
@@ -311,6 +315,58 @@ function toggleAudio() {
       text.textContent = 'Play Music ♫';
     });
   }
+}
+
+function tryAutoplay() {
+  if (isAudioPlaying) {
+    removeAutoplayListeners();
+    return;
+  }
+
+  if (!bgMusic) {
+    initAudio();
+  }
+
+  bgMusic.play()
+    .then(() => {
+      isAudioPlaying = true;
+      const toggleBtn = document.getElementById('audio-toggle');
+      if (toggleBtn) {
+        const iconPlaying = toggleBtn.querySelector('.icon-playing');
+        const iconMuted = toggleBtn.querySelector('.icon-muted');
+        const text = toggleBtn.querySelector('.audio-text');
+        if (iconPlaying) iconPlaying.classList.remove('hidden');
+        if (iconMuted) iconMuted.classList.add('hidden');
+        if (text) text.textContent = 'Playing ♫';
+      }
+      removeAutoplayListeners();
+    })
+    .catch(error => {
+      console.log('Autoplay blocked initially, waiting for user interaction:', error);
+      addAutoplayListeners();
+    });
+}
+
+function playOnInteraction(e) {
+  if (e && e.target && e.target.closest('#audio-toggle')) {
+    removeAutoplayListeners();
+    return;
+  }
+  tryAutoplay();
+}
+
+function addAutoplayListeners() {
+  document.addEventListener('click', playOnInteraction, { once: true });
+  document.addEventListener('touchstart', playOnInteraction, { once: true });
+  document.addEventListener('keydown', playOnInteraction, { once: true });
+  document.addEventListener('mousedown', playOnInteraction, { once: true });
+}
+
+function removeAutoplayListeners() {
+  document.removeEventListener('click', playOnInteraction);
+  document.removeEventListener('touchstart', playOnInteraction);
+  document.removeEventListener('keydown', playOnInteraction);
+  document.removeEventListener('mousedown', playOnInteraction);
 }
 
 /* ==========================================================================

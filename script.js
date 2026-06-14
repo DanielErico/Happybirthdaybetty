@@ -5,9 +5,7 @@
 
 // Global App State
 let currentStage = 1;
-let synthInterval = null;
-let audioContext = null;
-let masterGain = null;
+let bgMusic = null;
 let isAudioPlaying = false;
 let canvasParticles = [];
 
@@ -15,13 +13,13 @@ let canvasParticles = [];
 const polaroids = [
   {
     type: 'image',
-    src: './IMG-20260227-WA0090.jpg',
-    caption: "Look at that beautiful smile! My favorite view in the whole world. 😍"
+    src: './IMG-20260614-WA0002.jpg',
+    caption: "Look at that beautiful face! My favorite view in the whole world. 😍"
   },
   {
     type: 'image',
     src: './Memories/IMG-20260227-WA0098.jpg',
-    caption: "Capturing moments like this make me realize how lucky I am. 💖"
+    caption: "Capturing silly 😂  moments like this make me realize how lucky I am. 💖"
   },
   {
     type: 'video',
@@ -31,7 +29,7 @@ const polaroids = [
   {
     type: 'image',
     src: './IMG-20260426-WA0047.jpg',
-    caption: "That sassy look you give me when you're about to steal my food. 🍕"
+    caption: "Every moment with you is a moment I cherish. 💖"
   },
   {
     type: 'image',
@@ -40,13 +38,13 @@ const polaroids = [
   },
   {
     type: 'image',
-    src: './IMG-20260426-WA0055.jpg',
+    src: './IMG-20260614-WA0012.jpg',
     caption: "You looking stunning as always. The tough guy stood no chance. 🌹"
   },
   {
     type: 'video',
     src: './Memories/Snapchat-508980559.mp4#t=0,20',
-    caption: "Just us being silly together. Your energy is unmatched! 🤪"
+    caption: "Just you being silly with my phone. Your energy is unmatched! 🤪"
   },
   {
     type: 'image',
@@ -127,16 +125,16 @@ let quizScore = 0;
 // Digital Coupons
 const coupons = [
   {
-    title: "Unlimited Back Rubs 💆‍♀️",
-    desc: "Valid anytime you feel stressed or just want some pampering. Non-refundable, non-expiring!"
+    title: "Any Gift you want 🎁",
+    desc: "Don't worry about cost, you know my card has no limit lol 😂"
   },
   {
     title: "Date Night Choice 🕯️",
-    desc: "You choose the restaurant, the food, the movie, and I will be on my best behavior. I pay, you enjoy!"
+    desc: "You choose the Location, the food, the movie, and I will be on my best behavior. I pay, you enjoy!"
   },
   {
-    title: "Shopping Spree Day 🛍️",
-    desc: "A full day of shopping where I carry all your bags and don't check the bank account. (Pls be gentle 😂)"
+    title: "Online Shopping Spree Day 🛍️",
+    desc: "A full day of online shopping where I don't check the bank account. (Pls be gentle 😂)"
   }
 ];
 
@@ -148,16 +146,16 @@ let openedBoxes = [false, false, false];
 window.addEventListener('DOMContentLoaded', () => {
   // Initialize Lucide Icons
   lucide.createIcons();
-  
+
   // Setup Particles Canvas
   initParticles();
-  
+
   // Build Polaroid Gallery
   buildGallery();
 
   // Setup Audio Controls
   document.getElementById('audio-toggle').addEventListener('click', toggleAudio);
-  
+
   // Set stage 1 entry animations
   gsap.from("#stage-landing .glass-card", {
     opacity: 0,
@@ -173,21 +171,21 @@ window.addEventListener('DOMContentLoaded', () => {
 function initParticles() {
   const canvas = document.getElementById('particles-canvas');
   const ctx = canvas.getContext('2d');
-  
+
   function resizeCanvas() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
   }
-  
+
   resizeCanvas();
   window.addEventListener('resize', resizeCanvas);
-  
+
   class Particle {
     constructor() {
       this.reset();
       this.y = Math.random() * canvas.height;
     }
-    
+
     reset() {
       this.x = Math.random() * canvas.width;
       this.y = canvas.height + 20;
@@ -203,35 +201,35 @@ function initParticles() {
       const colors = ['rgba(255, 163, 177, ', 'rgba(240, 123, 144, ', 'rgba(214, 189, 242, '];
       this.colorBase = colors[Math.floor(Math.random() * colors.length)];
     }
-    
+
     update() {
       this.y -= this.speedY;
       this.x += this.speedX;
-      
+
       // pulse opacity slightly
       this.opacity += this.pulseSpeed * this.pulseDir;
       if (this.opacity > 0.6 || this.opacity < 0.1) {
         this.pulseDir *= -1;
       }
-      
+
       // boundary check
       if (this.y < -20 || this.x < -20 || this.x > canvas.width + 20) {
         this.reset();
       }
     }
-    
+
     draw() {
       ctx.save();
       ctx.globalAlpha = this.opacity;
       ctx.fillStyle = this.colorBase + '1)';
-      
+
       if (this.isHeart) {
         // Draw heart shape
         ctx.beginPath();
         const d = this.size;
         const x = this.x;
         const y = this.y;
-        
+
         ctx.moveTo(x, y + d / 4);
         ctx.quadraticCurveTo(x, y, x + d / 2, y);
         ctx.quadraticCurveTo(x + d, y, x + d, y + d / 3);
@@ -252,13 +250,13 @@ function initParticles() {
       ctx.restore();
     }
   }
-  
+
   // Create particle array
   const particleCount = Math.min(50, Math.floor(window.innerWidth / 20));
   for (let i = 0; i < particleCount; i++) {
     canvasParticles.push(new Particle());
   }
-  
+
   function animate() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     for (let p of canvasParticles) {
@@ -267,123 +265,51 @@ function initParticles() {
     }
     requestAnimationFrame(animate);
   }
-  
+
   animate();
 }
 
 /* ==========================================================================
-   Procedural Romantic Music Synthesizer (Web Audio API)
-   Plays a beautiful, soft ambient melody loop
+   Background Music Controller (HTML5 Audio)
+   Plays the customized romantic track 'Moavii - We Are.mp3'
    ========================================================================== */
 function initAudio() {
-  audioContext = new (window.AudioContext || window.webkitAudioContext)();
-  masterGain = audioContext.createGain();
-  masterGain.gain.value = 0.25; // Keep it soft and background
-  masterGain.connect(audioContext.destination);
-}
-
-function playSynthTone(freq, type, duration, delay, gainVal = 0.3) {
-  if (!audioContext || audioContext.state === 'suspended') return;
-  
-  const osc = audioContext.createOscillator();
-  const gainNode = audioContext.createGain();
-  
-  osc.type = type;
-  osc.frequency.setValueAtTime(freq, audioContext.currentTime + delay);
-  
-  gainNode.gain.setValueAtTime(0, audioContext.currentTime + delay);
-  gainNode.gain.linearRampToValueAtTime(gainVal, audioContext.currentTime + delay + 0.1);
-  gainNode.gain.exponentialRampToValueAtTime(0.0001, audioContext.currentTime + delay + duration);
-  
-  osc.connect(gainNode);
-  gainNode.connect(masterGain);
-  
-  osc.start(audioContext.currentTime + delay);
-  osc.stop(audioContext.currentTime + delay + duration);
-}
-
-function startMelodyLoop() {
-  if (synthInterval) clearInterval(synthInterval);
-  
-  // Gentle Romantic Chords (Arpeggiated)
-  const progressions = [
-    // Cmaj9 (C, E, G, B, D)
-    { root: 130.81, arpeggio: [130.81, 164.81, 196.00, 246.94, 293.66], melody: [392.00, 440.00, 493.88, 587.33] },
-    // Am9 (A, C, E, G, B)
-    { root: 110.00, arpeggio: [110.00, 130.81, 164.81, 196.00, 246.94], melody: [349.23, 392.00, 440.00, 523.25] },
-    // Fmaj7 (F, A, C, E)
-    { root: 87.31, arpeggio: [87.31, 110.00, 130.81, 164.81], melody: [261.63, 329.63, 349.23, 440.00] },
-    // G7sus4 (G, C, D, F) -> G7
-    { root: 98.00, arpeggio: [98.00, 130.81, 146.83, 174.61], melody: [293.66, 349.23, 392.00, 493.88] }
-  ];
-  
-  let progressionIdx = 0;
-  
-  function playMeasure() {
-    if (!isAudioPlaying) return;
-    
-    const prog = progressions[progressionIdx];
-    
-    // Play root bass note (low sine wave)
-    playSynthTone(prog.root, 'sine', 3.8, 0, 0.4);
-    
-    // Play arpeggiated backing chords (triangle wave for warmth)
-    prog.arpeggio.forEach((note, idx) => {
-      const delay = idx * 0.35;
-      playSynthTone(note, 'triangle', 2.0, delay, 0.15);
-    });
-    
-    // Play a gentle sweet melody on top (sine wave with delay)
-    const melodyNotes = prog.melody;
-    const melodyPattern = [0, 1, 2, 3, 2, 1];
-    melodyPattern.forEach((noteIdx, step) => {
-      const delay = 1.0 + step * 0.45;
-      // Randomly skip some notes for organic feel
-      if (Math.random() > 0.15) {
-        playSynthTone(melodyNotes[noteIdx], 'sine', 1.5, delay, 0.2);
-      }
-    });
-    
-    // advance progression
-    progressionIdx = (progressionIdx + 1) % progressions.length;
-  }
-  
-  // Play immediately, then loop every 4.5 seconds
-  playMeasure();
-  synthInterval = setInterval(playMeasure, 4500);
+  bgMusic = new Audio('Moavii - We Are.mp3');
+  bgMusic.loop = true;
+  bgMusic.volume = 0.35; // Soft background volume
 }
 
 function toggleAudio() {
-  if (!audioContext) {
+  if (!bgMusic) {
     initAudio();
   }
-  
-  if (audioContext.state === 'suspended') {
-    audioContext.resume();
-  }
-  
+
   const toggleBtn = document.getElementById('audio-toggle');
   const iconPlaying = toggleBtn.querySelector('.icon-playing');
   const iconMuted = toggleBtn.querySelector('.icon-muted');
   const text = toggleBtn.querySelector('.audio-text');
-  
+
   if (isAudioPlaying) {
     // Mute
     isAudioPlaying = false;
+    bgMusic.pause();
     iconPlaying.classList.add('hidden');
     iconMuted.classList.remove('hidden');
     text.textContent = 'Muted';
-    if (synthInterval) {
-      clearInterval(synthInterval);
-      synthInterval = null;
-    }
   } else {
     // Play
     isAudioPlaying = true;
     iconPlaying.classList.remove('hidden');
     iconMuted.classList.add('hidden');
     text.textContent = 'Playing ♫';
-    startMelodyLoop();
+    bgMusic.play().catch(error => {
+      console.log('Audio autoplay blocked by browser:', error);
+      // Revert states so the button is playable again
+      isAudioPlaying = false;
+      iconPlaying.classList.add('hidden');
+      iconMuted.classList.remove('hidden');
+      text.textContent = 'Play Music ♫';
+    });
   }
 }
 
@@ -393,16 +319,16 @@ function toggleAudio() {
 function nextStage(targetStage) {
   const currentStageEl = document.querySelector(`.stage.active`);
   const targetStageEl = document.getElementById(`stage-${getStageId(targetStage)}`);
-  
+
   if (!targetStageEl) return;
-  
+
   // Pause any playing videos before leaving stage 3
   if (currentStage === 3) {
     pauseAllVideos();
   }
-  
+
   // Audio auto-trigger logic
-  if (targetStage === 2 && !audioContext && !isAudioPlaying) {
+  if (targetStage === 2 && !bgMusic && !isAudioPlaying) {
     // Automatically trigger audio on first user progress click (if they haven't explicitly enabled/muted yet)
     toggleAudio();
   }
@@ -413,20 +339,20 @@ function nextStage(targetStage) {
       currentStageEl.classList.remove('active');
       targetStageEl.classList.add('active');
       currentStage = targetStage;
-      
+
       // Post-transition triggers
       onStageEnter(targetStage);
     }
   });
-  
+
   tl.to(currentStageEl, {
     opacity: 0,
     y: -20,
     duration: 0.5,
     ease: "power2.in"
   });
-  
-  tl.fromTo(targetStageEl, 
+
+  tl.fromTo(targetStageEl,
     { opacity: 0, y: 20 },
     { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" }
   );
@@ -467,7 +393,11 @@ function startIntroTypewriter() {
   const message = "Mon Coeur,\n\nThank you for coming into my life. Ever since January 23rd, 2026, my life has been completely different. The last 3 months have been a beautiful blur of memories, laughter, and me being completely, utterly finished. 😂\n\nI made this tiny interactive space for you so we can go through our memories and test if you actually remember our moments.\n\nLet's begin...";
   const textEl = document.getElementById('intro-typewriter-text');
   textEl.textContent = '';
-  
+
+  // Hide the continue button initially
+  const continueBtn = document.getElementById('intro-continue-btn');
+  gsap.set(continueBtn, { opacity: 0, y: 10, pointerEvents: 'none' });
+
   let i = 0;
   function type() {
     if (i < message.length) {
@@ -476,9 +406,20 @@ function startIntroTypewriter() {
       // Speed up typing for punctuation/spaces
       const delay = (message.charAt(i - 1) === '\n' || message.charAt(i - 1) === '.') ? 350 : 35;
       setTimeout(type, delay);
+    } else {
+      // Reveal the continue button when typing is fully complete
+      gsap.to(continueBtn, {
+        opacity: 1,
+        y: 0,
+        duration: 0.6,
+        ease: "power2.out",
+        onComplete: () => {
+          continueBtn.style.pointerEvents = 'auto';
+        }
+      });
     }
   }
-  
+
   type();
 }
 
@@ -493,22 +434,22 @@ function buildGallery() {
 function renderPolaroidDeck() {
   const deck = document.getElementById('polaroid-deck');
   deck.innerHTML = '';
-  
+
   polaroids.forEach((item, index) => {
     const card = document.createElement('div');
     card.className = 'polaroid-card';
     card.id = `polaroid-${index}`;
-    
+
     // Slight random rotation for Polaroid aesthetics
     const rotate = (index === activePolaroidIndex) ? 0 : (index % 2 === 0 ? 5 : -5);
     const scale = (index === activePolaroidIndex) ? 1 : 0.95;
     const zIndex = polaroids.length - Math.abs(index - activePolaroidIndex);
     const opacity = (index === activePolaroidIndex) ? 1 : 0;
-    
+
     card.style.transform = `rotate(${rotate}deg) scale(${scale})`;
     card.style.zIndex = zIndex;
     card.style.opacity = opacity;
-    
+
     if (index !== activePolaroidIndex) {
       card.style.pointerEvents = 'none';
     }
@@ -531,13 +472,13 @@ function renderPolaroidDeck() {
       </div>
       <div class="polaroid-caption">${item.caption}</div>
     `;
-    
+
     deck.appendChild(card);
   });
-  
+
   lucide.createIcons();
   updateGalleryControls();
-  
+
   // Auto-play active card video
   playActiveVideo();
 }
@@ -545,14 +486,14 @@ function renderPolaroidDeck() {
 function playActiveVideo() {
   const activeCard = document.getElementById(`polaroid-${activePolaroidIndex}`);
   if (!activeCard) return;
-  
+
   const video = activeCard.querySelector('.polaroid-video');
   const playHint = activeCard.querySelector('.video-play-hint');
-  
+
   if (video) {
     video.muted = false; // unmute so she can hear it
     video.currentTime = 0;
-    
+
     // Play with fallback for browser blocking auto-play audio
     const playPromise = video.play();
     if (playPromise !== undefined) {
@@ -595,13 +536,13 @@ function animatePolaroidTransition() {
   polaroids.forEach((item, index) => {
     const card = document.getElementById(`polaroid-${index}`);
     if (!card) return;
-    
+
     const isActive = index === activePolaroidIndex;
     const rotate = isActive ? 0 : (index % 2 === 0 ? 5 : -5);
     const scale = isActive ? 1 : 0.95;
     const zIndex = polaroids.length - Math.abs(index - activePolaroidIndex);
     const opacity = isActive ? 1 : 0;
-    
+
     gsap.to(card, {
       transform: `rotate(${rotate}deg) scale(${scale})`,
       zIndex: zIndex,
@@ -616,19 +557,19 @@ function animatePolaroidTransition() {
       }
     });
   });
-  
+
   updateGalleryControls();
 }
 
 function updateGalleryControls() {
   document.getElementById('gallery-counter').textContent = `${activePolaroidIndex + 1} / ${polaroids.length}`;
-  
+
   const prevBtn = document.getElementById('prev-gallery-btn');
   const nextBtn = document.getElementById('next-gallery-btn');
-  
+
   prevBtn.style.opacity = (activePolaroidIndex === 0) ? '0.3' : '1';
   prevBtn.style.pointerEvents = (activePolaroidIndex === 0) ? 'none' : 'auto';
-  
+
   nextBtn.style.opacity = (activePolaroidIndex === polaroids.length - 1) ? '0.3' : '1';
   nextBtn.style.pointerEvents = (activePolaroidIndex === polaroids.length - 1) ? 'none' : 'auto';
 }
@@ -644,14 +585,14 @@ function resetQuiz() {
 
 function displayQuestion() {
   const qData = quizQuestions[currentQuestionIndex];
-  
+
   // Question text
   document.getElementById('question-text').textContent = qData.question;
-  
+
   // Options
   const optionsContainer = document.getElementById('quiz-options');
   optionsContainer.innerHTML = '';
-  
+
   qData.options.forEach((opt, idx) => {
     const btn = document.createElement('button');
     btn.className = 'option-btn';
@@ -659,14 +600,14 @@ function displayQuestion() {
     btn.addEventListener('click', () => submitAnswer(idx));
     optionsContainer.appendChild(btn);
   });
-  
+
   // Progress Bar
   const progressPercent = (currentQuestionIndex / quizQuestions.length) * 100;
   document.getElementById('quiz-progress').style.width = `${progressPercent}%`;
-  
+
   // Tally display
   document.getElementById('quiz-score-display').textContent = `Question ${currentQuestionIndex + 1} of ${quizQuestions.length}`;
-  
+
   // Hide feedback overlay
   document.getElementById('quiz-feedback').classList.add('hidden');
 }
@@ -678,9 +619,9 @@ function submitAnswer(selectedIndex) {
   const feedbackTitle = document.getElementById('feedback-title');
   const feedbackMsg = document.getElementById('feedback-message');
   const nextBtnText = feedbackOverlay.querySelector('#feedback-next-btn span');
-  
+
   const isCorrect = selectedIndex === qData.correctIndex;
-  
+
   if (isCorrect) {
     quizScore++;
     feedbackIcon.textContent = '🎉';
@@ -697,13 +638,13 @@ function submitAnswer(selectedIndex) {
     feedbackTitle.textContent = 'Oops! Wrong answer!';
     feedbackMsg.textContent = qData.wrongMessage;
   }
-  
+
   if (currentQuestionIndex === quizQuestions.length - 1) {
     nextBtnText.textContent = "Finish Quiz 🏁";
   } else {
     nextBtnText.textContent = "Next Question →";
   }
-  
+
   feedbackOverlay.classList.remove('hidden');
 }
 
@@ -723,7 +664,7 @@ function advanceQuiz() {
 function openGiftBox(boxIdx, element) {
   if (openedBoxes[boxIdx]) return;
   openedBoxes[boxIdx] = true;
-  
+
   // Animate box lid flying off
   const lid = element.querySelector('.gift-lid');
   gsap.to(lid, {
@@ -737,13 +678,13 @@ function openGiftBox(boxIdx, element) {
       const modal = document.getElementById('gift-reveal-modal');
       const title = document.getElementById('coupon-title');
       const desc = document.getElementById('coupon-desc');
-      
+
       const couponData = coupons[boxIdx];
       title.textContent = couponData.title;
       desc.textContent = couponData.desc;
-      
+
       modal.classList.remove('hidden');
-      
+
       // Heart explosion confetti
       triggerHeartConfetti();
     }
@@ -752,7 +693,7 @@ function openGiftBox(boxIdx, element) {
 
 function closeGiftReveal() {
   document.getElementById('gift-reveal-modal').classList.add('hidden');
-  
+
   // Check if all boxes are open, show CTA
   if (openedBoxes.every(b => b)) {
     const nextBtn = document.getElementById('surprise-next-btn');
@@ -768,7 +709,7 @@ function openLetterAnimation() {
   const envelopeWrapper = document.getElementById('envelope-wrapper');
   const flap = envelopeWrapper.querySelector('.flap');
   const letterPreview = envelopeWrapper.querySelector('.letter-preview');
-  
+
   // 1. Open Flap
   gsap.to(flap, {
     rotateX: 180,
@@ -790,20 +731,20 @@ function openLetterAnimation() {
             duration: 0.4,
             onComplete: () => {
               envelopeWrapper.classList.add('hidden');
-              
+
               const letterContainer = document.getElementById('unfolded-letter-container');
               letterContainer.classList.remove('hidden');
-              
+
               // Scroll letter to top initially
               const parchment = letterContainer.querySelector('.parchment-letter');
               parchment.scrollTop = 0;
-              
-              gsap.fromTo(parchment, 
+
+              gsap.fromTo(parchment,
                 { scale: 0.8, opacity: 0 },
-                { 
-                  scale: 1, 
-                  opacity: 1, 
-                  duration: 0.8, 
+                {
+                  scale: 1,
+                  opacity: 1,
+                  duration: 0.8,
                   ease: "back.out(1.2)",
                   onComplete: () => {
                     // Continuous celebration sparks
@@ -823,21 +764,21 @@ function restartExperience() {
   // Reset all states
   activePolaroidIndex = 0;
   openedBoxes = [false, false, false];
-  
+
   // Reset Gift Boxes UI
   const boxes = document.querySelectorAll('.gift-box-item');
   boxes.forEach(box => {
     const lid = box.querySelector('.gift-lid');
     gsap.set(lid, { y: 0, rotation: 0, opacity: 1 });
   });
-  
+
   document.getElementById('envelope-wrapper').classList.remove('hidden');
   gsap.set(document.getElementById('envelope-wrapper'), { opacity: 1, scale: 1 });
   gsap.set(document.getElementById('envelope-wrapper').querySelector('.flap'), { rotateX: 0, zIndex: 5 });
   gsap.set(document.getElementById('envelope-wrapper').querySelector('.letter-preview'), { y: 0, zIndex: 2 });
-  
+
   document.getElementById('unfolded-letter-container').classList.add('hidden');
-  
+
   // Go back to landing
   nextStage(1);
 }
@@ -888,7 +829,7 @@ function startLetterCelebrationConfetti() {
     return Math.random() * (max - min) + min;
   }
 
-  const interval = setInterval(function() {
+  const interval = setInterval(function () {
     const timeLeft = animationEnd - Date.now();
 
     if (timeLeft <= 0) {

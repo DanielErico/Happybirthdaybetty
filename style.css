@@ -14,11 +14,11 @@
   --color-glass-border: rgba(255, 163, 177, 0.2);
   --color-text-primary: #f6eef3;
   --color-text-muted: #c2b5bc;
-  
+
   --font-serif: 'Playfair Display', Georgia, serif;
   --font-sans: 'Montserrat', Helvetica, sans-serif;
   --font-cursive: 'Dancing Script', cursive;
-  
+
   --transition-smooth: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
@@ -60,8 +60,8 @@ body::before {
   width: 100%;
   height: 100%;
   background: radial-gradient(circle at 20% 30%, rgba(240, 123, 144, 0.15), transparent 45%),
-              radial-gradient(circle at 80% 70%, rgba(214, 189, 242, 0.15), transparent 45%),
-              linear-gradient(135deg, #0b0a0f 0%, #15131b 100%);
+    radial-gradient(circle at 80% 70%, rgba(214, 189, 242, 0.15), transparent 45%),
+    linear-gradient(135deg, #0b0a0f 0%, #15131b 100%);
   z-index: 0;
 }
 
@@ -101,8 +101,13 @@ body::before {
 }
 
 @keyframes rotateMusic {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .audio-text {
@@ -179,15 +184,41 @@ body::before {
   font-size: 12px;
 }
 
-.text-center { text-align: center; }
-.text-right { text-align: right; }
-.text-muted { color: var(--color-text-muted); }
-.text-white { color: #ffffff; }
-.text-light { color: #f0ebf1; }
-.mt-3 { margin-top: 16px; }
-.mt-4 { margin-top: 24px; }
-.mt-5 { margin-top: 32px; }
-.mb-4 { margin-bottom: 24px; }
+.text-center {
+  text-align: center;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.text-muted {
+  color: var(--color-text-muted);
+}
+
+.text-white {
+  color: #ffffff;
+}
+
+.text-light {
+  color: #f0ebf1;
+}
+
+.mt-3 {
+  margin-top: 16px;
+}
+
+.mt-4 {
+  margin-top: 24px;
+}
+
+.mt-5 {
+  margin-top: 32px;
+}
+
+.mb-4 {
+  margin-bottom: 24px;
+}
 
 /* Premium Glassmorphic Card styling */
 .glass-card {
@@ -196,8 +227,8 @@ body::before {
   padding: 40px 30px;
   border-radius: 24px;
   backdrop-filter: blur(15px);
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5), 
-              inset 0 1px 2px rgba(255, 255, 255, 0.1);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5),
+    inset 0 1px 2px rgba(255, 255, 255, 0.1);
   position: relative;
   overflow: hidden;
 }
@@ -241,12 +272,29 @@ body::before {
 }
 
 @keyframes heartPulse {
-  0% { transform: scale(1); }
-  15% { transform: scale(1.18); }
-  30% { transform: scale(1); }
-  45% { transform: scale(1.12); }
-  60% { transform: scale(1); }
-  100% { transform: scale(1); }
+  0% {
+    transform: scale(1);
+  }
+
+  15% {
+    transform: scale(1.18);
+  }
+
+  30% {
+    transform: scale(1);
+  }
+
+  45% {
+    transform: scale(1.12);
+  }
+
+  60% {
+    transform: scale(1);
+  }
+
+  100% {
+    transform: scale(1);
+  }
 }
 
 .nickname-badge {
@@ -360,8 +408,8 @@ body::before {
   background: #ffffff;
   border-radius: 4px;
   padding: 14px 14px 24px 14px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6), 
-              0 2px 5px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6),
+    0 2px 5px rgba(0, 0, 0, 0.3);
   position: absolute;
   top: 0;
   left: 0;
@@ -538,8 +586,13 @@ body::before {
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 .feedback-content {
@@ -618,7 +671,8 @@ body::before {
 }
 
 /* Cross Ribbons on boxes */
-.gift-body::before, .gift-lid::before {
+.gift-body::before,
+.gift-lid::before {
   content: '';
   position: absolute;
   top: 0;
@@ -638,24 +692,53 @@ body::before {
 }
 
 /* Color codes for gift boxes */
-.gift-box-item:nth-child(2) .gift-lid { background: #d6bdf2; }
-.gift-box-item:nth-child(2) .gift-body { background: #e6d6fa; }
-.gift-box-item:nth-child(3) .gift-lid { background: #9bd3e5; }
-.gift-box-item:nth-child(3) .gift-body { background: #c6e8f4; }
+.gift-box-item:nth-child(2) .gift-lid {
+  background: #d6bdf2;
+}
+
+.gift-box-item:nth-child(2) .gift-body {
+  background: #e6d6fa;
+}
+
+.gift-box-item:nth-child(3) .gift-lid {
+  background: #9bd3e5;
+}
+
+.gift-box-item:nth-child(3) .gift-body {
+  background: #c6e8f4;
+}
 
 /* Box bouncing animation */
 .gift-box-item {
   animation: boxWobble 4s infinite ease-in-out;
 }
 
-.gift-box-item:nth-child(2) { animation-delay: 0.5s; }
-.gift-box-item:nth-child(3) { animation-delay: 1s; }
+.gift-box-item:nth-child(2) {
+  animation-delay: 0.5s;
+}
+
+.gift-box-item:nth-child(3) {
+  animation-delay: 1s;
+}
 
 @keyframes boxWobble {
-  0%, 100% { transform: rotate(0); }
-  25% { transform: rotate(3deg) translateY(-2px); }
-  50% { transform: rotate(-3deg) translateY(0); }
-  75% { transform: rotate(2deg) translateY(-1px); }
+
+  0%,
+  100% {
+    transform: rotate(0);
+  }
+
+  25% {
+    transform: rotate(3deg) translateY(-2px);
+  }
+
+  50% {
+    transform: rotate(-3deg) translateY(0);
+  }
+
+  75% {
+    transform: rotate(2deg) translateY(-1px);
+  }
 }
 
 /* Gift Reveal Coupon Layout */
@@ -688,8 +771,15 @@ body::before {
 }
 
 @keyframes ticketPop {
-  from { transform: scale(0.7) rotate(-5deg); opacity: 0; }
-  to { transform: scale(1) rotate(0); opacity: 1; }
+  from {
+    transform: scale(0.7) rotate(-5deg);
+    opacity: 0;
+  }
+
+  to {
+    transform: scale(1) rotate(0);
+    opacity: 1;
+  }
 }
 
 .coupon-border {
@@ -855,8 +945,13 @@ body::before {
   border-radius: 3px;
 }
 
-.line1 { width: 80%; }
-.line2 { width: 50%; }
+.line1 {
+  width: 80%;
+}
+
+.line2 {
+  width: 50%;
+}
 
 .envelope-wrapper:hover .letter-preview {
   transform: translateY(-40px);
@@ -879,8 +974,15 @@ body::before {
 }
 
 @keyframes nudge {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(4px); }
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(4px);
+  }
 }
 
 /* Heartfelt Unfolded parchment styling */
@@ -954,42 +1056,42 @@ body::before {
   #app-container {
     padding: 16px;
   }
-  
+
   .glass-card {
     padding: 30px 16px;
   }
-  
+
   .heading-serif {
     font-size: 24px;
   }
-  
+
   .polaroid-deck {
     width: 250px;
     height: 300px;
   }
-  
+
   .polaroid-image-container {
     height: 200px;
   }
-  
+
   .polaroid-caption {
     font-size: 17px;
   }
-  
+
   .gift-container {
     gap: 12px;
   }
-  
+
   .gift-box-item {
     width: 76px;
     height: 76px;
   }
-  
+
   .gift-lid {
     width: 64px;
     bottom: 46px;
   }
-  
+
   .gift-body {
     width: 58px;
     height: 46px;

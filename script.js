@@ -60,14 +60,14 @@ const quizQuestions = [
   {
     question: "When did we first meet?",
     options: [
-      "January 23rd, 2026",
+      "January 11th, 2026",
       "January 1st, 2026",
       "February 14th, 2026",
       "December 25th, 2025"
     ],
     correctIndex: 0,
     correctMessage: "Ah, you remembered! Or did you just count back from when my bank account started draining? 😂",
-    wrongMessage: "Nope! New Year's resolution was to fear women, remember? January 23rd was the fated day!"
+    wrongMessage: "Nope! New Year's resolution was to fear women, remember? January 11th was the fated day!"
   },
   {
     question: "What is my special name for you?",
@@ -446,7 +446,7 @@ function onStageEnter(stageNum) {
    Stage 2: Typewriter Animation
    ========================================================================== */
 function startIntroTypewriter() {
-  const message = "Mon Coeur,\n\nThank you for coming into my life. Ever since January 23rd, 2026, my life has been completely different. The last 3 months have been a beautiful blur of memories, laughter, and me being completely, utterly finished. 😂\n\nI made this tiny interactive space for you so we can go through our memories and test if you actually remember our moments.\n\nLet's begin...";
+  const message = "Mon Coeur,\n\nThank you for coming into my life. Ever since January 11th, 2026, my life has been completely different. The last 3 months have been a beautiful blur of memories, laughter, and me being completely, utterly finished. 😂\n\nI made this tiny interactive space for you so we can go through our memories and test if you actually remember our moments.\n\nLet's begin...";
   const textEl = document.getElementById('intro-typewriter-text');
   textEl.textContent = '';
 
